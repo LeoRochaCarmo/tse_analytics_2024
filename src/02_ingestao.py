@@ -1,3 +1,4 @@
+#%%
 
 import pandas as pd
 import sqlalchemy
@@ -14,3 +15,6 @@ for i in ingestoes:
     path = i['path']
     df = pd.read_csv(path, encoding='latin-1',sep=';')
     df.to_sql(i['table'], engine, if_exists='replace', index=False)
+
+
+# %%
