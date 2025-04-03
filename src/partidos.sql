@@ -163,7 +163,12 @@ tb_all AS(
         SUM(CASE WHEN SG_UF ='TO' THEN txCorRacaPretaParda ELSE 0 END) as txCorRacaPretaPardaTO,
         SUM(CASE WHEN SG_UF ='RN' THEN txCorRacaPretaParda ELSE 0 END) as txCorRacaPretaPardaRN,
         SUM(CASE WHEN SG_UF ='RR' THEN txCorRacaPretaParda ELSE 0 END) as txCorRacaPretaPardaRR,
-        1.0 * SUM(totalCorRacaPretaParda) / SUM(totalCandidaturas) as txCorRacaPretaPardaBR
+        1.0 * SUM(totalCorRacaPretaParda) / SUM(totalCandidaturas) as txCorRacaPretaPardaBR,
+        SUM(totalGenFeminino) AS totalGenFeminino,
+        SUM(totalCorRacaPreta) AS totalCorRacaPreta,
+        SUM(totalCorRacaNaoBranca) AS totalCorRacaNaoBranca,
+        SUM(totalCorRacaPretaParda) AS totalCorRacaPretaParda,
+        SUM(totalCandidaturas) AS totalCandidaturas
     FROM tb_group_uf
 
     GROUP BY 1, 2
