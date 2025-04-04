@@ -1,3 +1,4 @@
+#%%
 
 from zipfile import ZipFile
 import os
@@ -5,7 +6,7 @@ from pathlib import Path
 
 data_folder = 'data'
 
-path = os.path.join(Path(__file__).parent, data_folder)
+path = os.path.join(Path(__file__).parent.parent, data_folder)
 
 files = os.listdir(path)
 
