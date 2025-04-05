@@ -1,4 +1,5 @@
 import seaborn as sn
+import pandas as pd
 from adjustText import adjust_text
 import matplotlib.pyplot as plt
 import matplotlib.image as img
@@ -51,9 +52,15 @@ def make_scatter(data, cluster=False, size=False):
     plt.xlabel('Taxa de Mulheres')
     plt.ylabel('Taxa de Pessoas Pretas')
 
-    txCorRacaPreta = data['totalCorRacaPreta'].sum() / data['totalCandidaturas'].sum()
-    txGenFeminino = data['totalGenFeminino'].sum() / data['totalCandidaturas'].sum()
-
+    total_candidaturas = data['totalCandidaturas'].sum()
+    
+    if total_candidaturas and not pd.isna(total_candidaturas):
+        txCorRacaPreta = data['totalCorRacaPreta'].sum() / total_candidaturas
+        txGenFeminino = data['totalGenFeminino'].sum() / total_candidaturas
+    else:
+         txCorRacaPreta = float('nan')
+         txGenFeminino = float('nan')
+         
     xmin, xmax = plt.xlim()
 
     plt.hlines(y=txCorRacaPreta, 
