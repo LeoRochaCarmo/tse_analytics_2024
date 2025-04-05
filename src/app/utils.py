@@ -33,10 +33,10 @@ def make_scatter(data, cluster=False, size=False):
     sn.scatterplot(**config)
 
     texts = []
-    for i in data['SG_PARTIDO']:
+    for i in data['SG_PARTIDO'].unique():
          data_tmp = data[data['SG_PARTIDO'] == i]
-         x = data_tmp['txGenFeminino']
-         y = data_tmp['txCorRacaPreta']
+         x = data_tmp['txGenFeminino'].iloc[0]
+         y = data_tmp['txCorRacaPreta'].iloc[0]
          texts.append(plt.text(x, y, i, fontsize=9))
 
     adjust_text(texts, 
