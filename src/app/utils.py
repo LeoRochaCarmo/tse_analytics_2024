@@ -77,7 +77,9 @@ def make_scatter(data, cluster=False, size=False):
     handles = handles[-2:]
     labels = labels[-2:]
 
-    plt.legend(handles=handles, labels=labels, loc='lower right', title='Partidos', title_fontsize=10)
+    plt.legend(handles=handles, labels=labels, 
+               loc='lower left', title='Partidos', 
+               title_fontsize=10, bbox_to_anchor=(0.55, -0.35))
 
     return fig
 
