@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as img
 import streamlit as st
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+from sklearn import cluster
 
 def make_scatter(data, cluster=False, size=False):
 
@@ -13,8 +14,9 @@ def make_scatter(data, cluster=False, size=False):
          'y':'txCorRacaPreta',
          'size':'totalCandidaturas',
          'sizes':(5,300),
-         'hue':'clusterBR',
-         'palette':'viridis'
+         'hue':'cluster',
+         'palette':'viridis',
+         'alpha': 0.6,
     }
 
     if not cluster:
@@ -78,3 +80,9 @@ def make_scatter(data, cluster=False, size=False):
     plt.legend(handles=handles, labels=labels, loc='lower right', title='Partidos', title_fontsize=10)
 
     return fig
+
+def make_clusters(data, n=6):
+     model = cluster.KMeans(n_clusters=n, random_state=42)
+     model.fit(data[['txGenFeminino', 'txCorRacaPreta']])
+     data['cluster'] = model.labels_
+     return data
