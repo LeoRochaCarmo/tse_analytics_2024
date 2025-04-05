@@ -173,8 +173,8 @@ adjust_text(texts,
             arrowprops=dict(arrowstyle='->', color='gray'))
 
 plt.grid(True)
-plt.title('Partidos: Cor vs Gênero - Eleições 2024')
-plt.suptitle('Maior a bolha, maior o tamanho do partido.', fontdict={'size': '9'})
+plt.suptitle('Partidos: Cor vs Gênero - Eleições 2024')
+plt.title('Maior a bolha, maior o tamanho do partido.', fontsize=9)
 plt.xlabel('Taxa de Mulheres')
 plt.ylabel('Taxa de Pessoas Pretas')
 plt.hlines(y=txCorRacaPreta, 
@@ -214,3 +214,5 @@ plt.savefig('..\\img\\partidos_cor_raca_genero_clusterBR.png')
 
 df.sort_values('totalCandidaturas', ascending=False).reset_index(drop=True)
 # %%
+
+df.to_csv('..\\data\\dataframe_old.csv', sep=';')

@@ -84,4 +84,4 @@ tb_union_all AS (
 )
 
 SELECT * FROM tb_union_all
-WHERE SG_PARTIDO = 'UP'
+
