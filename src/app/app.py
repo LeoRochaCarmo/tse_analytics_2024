@@ -27,14 +27,18 @@ uf_options = list(df['SG_UF'].unique())
 uf_options.remove('BR')
 uf_options = ['BR'] + uf_options
 
-estado = st.sidebar.selectbox(label='Estado', 
-                              placeholder='Selecione o estado...',
-                              index=None,
-                              options=uf_options)
+col1, col2 = st.columns(2, vertical_alignment='center', gap='medium')
 
-size = st.sidebar.checkbox(label='Tamanho das bolhas')
-cluster = st.sidebar.checkbox(label='Definir cluster')
-n_cluster = st.sidebar.number_input(label='Quantidade de clusters', format='%d', max_value=10, min_value=1)
+with col1:
+    estado = st.selectbox(label='Estado',
+                          placeholder='Selecione o estado.',
+                          index=None,
+                          options=uf_options)
+    size = st.checkbox(label='Tamanho das bolhas')
+
+with col2:                         
+    n_cluster = st.number_input(label='Quantidade de clusters', format='%d', max_value=10, min_value=1)
+    cluster = st.checkbox(label='Definir cluster')
 
 data = df[df['SG_UF'] == estado]
 
