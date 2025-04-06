@@ -11,16 +11,14 @@ src_path = os.path.dirname(app_path)
 base_path = os.path.dirname(src_path)
 data_path = os.path.join(base_path, 'data')
 
-database_path = os.path.join(data_path, 'database.db')
-engine = sqlalchemy.create_engine(f'sqlite:///{database_path}')
-
-query_path = os.path.join(app_path, 'etl_partidos.sql')
-with open(query_path, 'r') as open_file:
-    query = open_file.read()
-
-df = pd.read_sql(query, engine)
+@st.cache_data(ttl=60*60*24)
+def create_df():
+    filename = os.path.join(data_path, 'data_partidos.parquet')
+    return pd.read_parquet(filename)
 
 #%%
+
+df = create_df()
 
 welcome = '''
 # TSE Analytics - Eleições 2024
