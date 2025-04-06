@@ -27,7 +27,7 @@ Uma iniciativa Téo Me Why em conjunto com a comunidade de análise e ciência d
 '''
 st.markdown(welcome)
 
-uf_options = list(df['SG_UF'].unique())
+uf_options = list(df['SG_UF'].sort_values().unique())
 uf_options.remove('BR')
 uf_options = ['BR'] + uf_options
 
