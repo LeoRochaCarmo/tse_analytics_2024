@@ -35,7 +35,7 @@ tb_group_uf AS (
     SELECT
         SG_PARTIDO,
         NM_PARTIDO,
-        DS_CARGO,
+        'GERAL' AS DS_CARGO,
         SG_UF,
         AVG(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS txGenFeminino,
         SUM(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS totalGenFeminino,
@@ -56,7 +56,7 @@ tb_group_br AS (
     SELECT
         SG_PARTIDO,
         NM_PARTIDO,
-        DS_CARGO,
+        'GERAL' AS DS_CARGO,
         'BR' AS SG_UF,
         AVG(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS txGenFeminino,
         SUM(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS totalGenFeminino,
@@ -126,7 +126,6 @@ tb_union_all AS (
     UNION ALL
 
     SELECT * FROM tb_group_cargo_br
-
 
     UNION ALL
 

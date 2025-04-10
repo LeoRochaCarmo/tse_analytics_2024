@@ -31,6 +31,11 @@ uf_options = list(df['SG_UF'].sort_values().unique())
 uf_options.remove('BR')
 uf_options = ['BR'] + uf_options
 
+cargos_options = list(df['DS_CARGO'].unique())
+# cargos_options.sort()
+# cargos_options.remove('GERAL')
+# cargos_options = ['GERAL'] + cargos_options
+
 col1, col2 = st.columns(2, vertical_alignment='center', gap='medium')
 
 with col1:
@@ -39,13 +44,19 @@ with col1:
                           index=None,
                           options=uf_options)
     size = st.checkbox(label='Tamanho das bolhas')
+    cargo = st.selectbox(label='Cargo',
+                          placeholder='Selecione um cargo',
+                          index=None,
+                          options=cargos_options)
 
 with col2:                         
     n_cluster = st.number_input(label='Quantidade de clusters', format='%d', max_value=10, min_value=1)
     cluster = st.checkbox(label='Definir cluster')
 
-data = df[df['SG_UF'] == estado]
+data = df[(df['SG_UF'] == estado) & (df['DS_CARGO'] == cargo)].copy()
 
+total_candidatos = data['totalCandidaturas'].sum()
+st.markdown(f'Total de candidaturas: {total_candidatos}')
 if cluster:
     data = make_clusters(data, n_cluster)
 
@@ -54,3 +65,5 @@ fig = make_scatter(data=data, size=size, cluster=cluster)
 st.pyplot(fig)
 
 #%%
+
+df
