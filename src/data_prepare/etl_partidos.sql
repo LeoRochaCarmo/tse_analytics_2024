@@ -35,6 +35,7 @@ tb_group_uf AS (
     SELECT
         SG_PARTIDO,
         NM_PARTIDO,
+        DS_CARGO,
         SG_UF,
         AVG(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS txGenFeminino,
         SUM(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS totalGenFeminino,
@@ -47,32 +48,72 @@ tb_group_uf AS (
         COUNT(*) AS totalCandidaturas
     FROM tb_info_completa_cand
 
-    GROUP BY 1, 2, 3
+    GROUP BY 1, 2, 3, 4
 ),
 
 tb_group_br AS (
 
     SELECT
-        SG_PARTIDO,	
+        SG_PARTIDO,
         NM_PARTIDO,
+        DS_CARGO,
         'BR' AS SG_UF,
-        1.0 * SUM(totalGenFeminino) / SUM(totalCandidaturas) AS txGenFeminino,
-        SUM(totalGenFeminino) AS totalGenFeminino,
+        AVG(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS txGenFeminino,
+        SUM(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS totalGenFeminino,
+        AVG(CASE WHEN DS_COR_RACA = 'PRETA' THEN 1 ELSE 0 END) as txCorRacaPreta,
+        SUM(CASE WHEN DS_COR_RACA = 'PRETA' THEN 1 ELSE 0 END) as totalCorRacaPreta,
+        AVG(CASE WHEN DS_COR_RACA IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) as txCorRacaPretaParda,
+        SUM(CASE WHEN DS_COR_RACA IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) as totalCorRacaPretaParda,
+        AVG(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as txCorRacaNaoBranca,
+        SUM(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as totalCorRacaNaoBranca,
+        COUNT(*) AS totalCandidaturas
+    FROM tb_info_completa_cand
 
-        1.0 * SUM(totalCorRacaPreta) / SUM(totalCandidaturas) AS txCorRacaPreta,
-        SUM(totalCorRacaPreta) AS totalCorRacaPreta,
+    GROUP BY 1, 2, 3, 4
+),
 
-        1.0 * SUM(totalCorRacaPretaParda) / SUM(totalCandidaturas) AS txCorRacaPretaParda,
-        SUM(totalCorRacaPretaParda) AS totalCorRacaPretaParda,
+tb_group_cargo_uf AS (
 
-        1.0 * SUM(totalCorRacaNaoBranca) / SUM(totalCandidaturas) AS txCorRacaNaoBranca,
-        SUM(totalCorRacaNaoBranca) AS totalCorRacaNaoBranca,
+    SELECT
+            SG_PARTIDO,
+            NM_PARTIDO,
+            DS_CARGO,
+            SG_UF,
+            AVG(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS txGenFeminino,
+            SUM(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS totalGenFeminino,
+            AVG(CASE WHEN DS_COR_RACA = 'PRETA' THEN 1 ELSE 0 END) as txCorRacaPreta,
+            SUM(CASE WHEN DS_COR_RACA = 'PRETA' THEN 1 ELSE 0 END) as totalCorRacaPreta,
+            AVG(CASE WHEN DS_COR_RACA IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) as txCorRacaPretaParda,
+            SUM(CASE WHEN DS_COR_RACA IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) as totalCorRacaPretaParda,
+            AVG(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as txCorRacaNaoBranca,
+            SUM(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as totalCorRacaNaoBranca,
+            COUNT(*) AS totalCandidaturas
+        FROM tb_info_completa_cand
 
-        SUM(totalCandidaturas) AS totalCandidaturas
+        GROUP BY 1, 2, 3, 4
 
-    FROM tb_group_uf
+),
 
-    GROUP BY 1, 2, 3
+tb_group_cargo_br AS (
+
+    SELECT
+            SG_PARTIDO,
+            NM_PARTIDO,
+            DS_CARGO,
+            'BR' AS SG_UF,
+            AVG(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS txGenFeminino,
+            SUM(CASE WHEN DS_GENERO = 'FEMININO' THEN 1 ELSE 0 END) AS totalGenFeminino,
+            AVG(CASE WHEN DS_COR_RACA = 'PRETA' THEN 1 ELSE 0 END) as txCorRacaPreta,
+            SUM(CASE WHEN DS_COR_RACA = 'PRETA' THEN 1 ELSE 0 END) as totalCorRacaPreta,
+            AVG(CASE WHEN DS_COR_RACA IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) as txCorRacaPretaParda,
+            SUM(CASE WHEN DS_COR_RACA IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) as totalCorRacaPretaParda,
+            AVG(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as txCorRacaNaoBranca,
+            SUM(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as totalCorRacaNaoBranca,
+            COUNT(*) AS totalCandidaturas
+        FROM tb_info_completa_cand
+
+        GROUP BY 1, 2, 3, 4
+
 ),
 
 tb_union_all AS (
@@ -81,7 +122,18 @@ tb_union_all AS (
     UNION ALL
 
     SELECT * FROM tb_group_uf
+
+    UNION ALL
+
+    SELECT * FROM tb_group_cargo_br
+
+
+    UNION ALL
+
+    SELECT * FROM tb_group_cargo_uf
 )
 
 SELECT * FROM tb_union_all
+
+
 
