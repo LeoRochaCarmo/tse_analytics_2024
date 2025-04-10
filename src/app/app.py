@@ -60,10 +60,11 @@ st.markdown(f'Total de candidaturas: {total_candidatos}')
 if cluster:
     data = make_clusters(data, n_cluster)
 
-fig = make_scatter(data=data, size=size, cluster=cluster)
+x = 'txGenFeminino'
+y = 'txCorRacaPreta'
+
+fig = make_scatter(data=data, x=x, y=y, size=size, cluster=cluster)
 
 st.pyplot(fig)
 
 #%%
-
-df
