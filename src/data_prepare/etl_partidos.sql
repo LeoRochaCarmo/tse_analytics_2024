@@ -25,7 +25,12 @@ tb_total_bens AS (
 tb_info_completa_cand AS (
     SELECT
         t1.*,
-        COALESCE(t2.total_bens, 0) AS total_bens
+        COALESCE(t2.total_bens, 0) AS total_bens,
+        COALESCE(DATE('now') - DATE(
+        SUBSTR(DT_NASCIMENTO, 7, 4) || '-'  ||
+        SUBSTR(DT_NASCIMENTO, 4, 2) || '-'  ||
+        SUBSTR(DT_NASCIMENTO, 1, 2)
+        ),0) AS NR_IDADE
     FROM tb_cand AS t1
     LEFT JOIN tb_total_bens AS t2
     ON t1.SQ_CANDIDATO = t2.SQ_CANDIDATO
@@ -45,6 +50,13 @@ tb_group_uf AS (
         SUM(CASE WHEN DS_COR_RACA IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) as totalCorRacaPretaParda,
         AVG(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as txCorRacaNaoBranca,
         SUM(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as totalCorRacaNaoBranca,
+        SUM(total_bens) AS totalBens,
+        AVG(total_bens) AS avgBens,
+        COALESCE(AVG(CASE WHEN total_bens > 1 THEN total_bens END), 0) AS avBensNotZero,
+        1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'CASADO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilCasado,
+        1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'SOLTEIRO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSolteiro,
+        1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL IN ('DIVORCIADO(A)', 'SEPARADO(A) JUDICIALMENTE') THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSeparadoDivorciado,
+        AVG(NR_IDADE) AS avgIdade,
         COUNT(*) AS totalCandidaturas
     FROM tb_info_completa_cand
 
@@ -66,6 +78,13 @@ tb_group_br AS (
         SUM(CASE WHEN DS_COR_RACA IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) as totalCorRacaPretaParda,
         AVG(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as txCorRacaNaoBranca,
         SUM(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as totalCorRacaNaoBranca,
+        SUM(total_bens) AS totalBens,
+        AVG(total_bens) AS avgBens,
+        COALESCE(AVG(CASE WHEN total_bens > 1 THEN total_bens END), 0) AS avBensNotZero,
+        1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'CASADO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilCasado,
+        1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'SOLTEIRO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSolteiro,
+        1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL IN ('DIVORCIADO(A)', 'SEPARADO(A) JUDICIALMENTE') THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSeparadoDivorciado,
+        AVG(NR_IDADE) AS avgIdade,
         COUNT(*) AS totalCandidaturas
     FROM tb_info_completa_cand
 
@@ -87,6 +106,13 @@ tb_group_cargo_uf AS (
             SUM(CASE WHEN DS_COR_RACA IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) as totalCorRacaPretaParda,
             AVG(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as txCorRacaNaoBranca,
             SUM(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as totalCorRacaNaoBranca,
+            SUM(total_bens) AS totalBens,
+            AVG(total_bens) AS avgBens,
+            COALESCE(AVG(CASE WHEN total_bens > 1 THEN total_bens END), 0) AS avBensNotZero,
+            1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'CASADO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilCasado,
+            1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'SOLTEIRO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSolteiro,
+            1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL IN ('DIVORCIADO(A)', 'SEPARADO(A) JUDICIALMENTE') THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSeparadoDivorciado,
+            AVG(NR_IDADE) AS avgIdade,
             COUNT(*) AS totalCandidaturas
         FROM tb_info_completa_cand
 
@@ -109,6 +135,13 @@ tb_group_cargo_br AS (
             SUM(CASE WHEN DS_COR_RACA IN ('PRETA', 'PARDA') THEN 1 ELSE 0 END) as totalCorRacaPretaParda,
             AVG(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as txCorRacaNaoBranca,
             SUM(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as totalCorRacaNaoBranca,
+            SUM(total_bens) AS totalBens,
+            AVG(total_bens) AS avgBens,
+            COALESCE(AVG(CASE WHEN total_bens > 1 THEN total_bens END), 0) AS avBensNotZero,
+            1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'CASADO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilCasado,
+            1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'SOLTEIRO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSolteiro,
+            1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL IN ('DIVORCIADO(A)', 'SEPARADO(A) JUDICIALMENTE') THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSeparadoDivorciado,
+            AVG(NR_IDADE) AS avgIdade,
             COUNT(*) AS totalCandidaturas
         FROM tb_info_completa_cand
 
@@ -132,7 +165,11 @@ tb_union_all AS (
     SELECT * FROM tb_group_cargo_uf
 )
 
-SELECT * FROM tb_union_all
+SELECT *
+
+FROM tb_union_all
+
+LIMIT 100
 
 
 
