@@ -6,6 +6,7 @@ import matplotlib.image as img
 import streamlit as st
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from sklearn import cluster
+from sklearn import preprocessing
 
 def make_scatter(data, x, y, x_label, y_label, cluster=False, size=False):
 
@@ -44,13 +45,13 @@ def make_scatter(data, x, y, x_label, y_label, cluster=False, size=False):
                 arrowprops=dict(arrowstyle='->', color='gray'))
 
     plt.grid(True)
-    plt.suptitle(f'Partidos: {x_label} vs {y_label} - Eleições 2024')
+    plt.suptitle(f'Partidos: {x_label.title()} vs {y_label.title()} - Eleições 2024')
 
     if size:
         plt.title('Maior a bolha, maior o tamanho do partido.', fontsize=9)
 
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
+    plt.xlabel(x_label.title())
+    plt.ylabel(y_label.title())
 
     total_candidaturas = data['totalCandidaturas'].sum()
     
@@ -91,8 +92,11 @@ def make_scatter(data, x, y, x_label, y_label, cluster=False, size=False):
 
     return fig
 
-def make_clusters(data, n=6):
-     model = cluster.KMeans(n_clusters=n, random_state=42)
-     model.fit(data[['txGenFeminino', 'txCorRacaPreta']])
-     data['cluster'] = model.labels_
-     return data
+def make_clusters(data, features, n=6):
+     
+    norm = preprocessing.MinMaxScaler()
+    data_norm = norm.fit_transform(data[features])
+    model = cluster.KMeans(n_clusters=n, random_state=42, max_iter=10000)
+    model.fit(data_norm)
+    data['cluster'] = model.labels_
+    return data

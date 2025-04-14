@@ -52,29 +52,32 @@ cargos_options.sort()
 cargos_options.remove('GERAL')
 cargos_options = ['GERAL'] + cargos_options
 
+# Definição do estado e cargo
 col1, col2 = st.columns(2, vertical_alignment='center', gap='medium')
 with col1:
     estado = st.selectbox(label='Estado',
                           placeholder='Selecione o estado.',
-                          index=None,
+                          index=0,
                           options=uf_options)
 
 with col2:                         
     cargo = st.selectbox(label='Cargo',
                           placeholder='Selecione um cargo',
-                          index=None,
+                          index=0,
                           options=cargos_options)
-    
+
+# Definição dos eixos  
 col1, col2 = st.columns(2, vertical_alignment='center', gap='medium')
 with col1:
-    x_option = st.selectbox(label='Eixo x', options=features_options)
+    x_option = st.selectbox(label='Eixo x', options=features_options, index=6)
     x = features_map[x_option]
     features_options.remove(x_option)
 
 with col2:
-    y_option = st.selectbox(label='Eixo y', options=features_options)
+    y_option = st.selectbox(label='Eixo y', options=features_options, index=7)
     y = features_map[y_option]
 
+# Definição do uso de cluster
 col1, col2 = st.columns(2, vertical_alignment='center', gap='medium')
 with col1:
     cluster = st.checkbox(label='Definir cluster')
@@ -90,7 +93,7 @@ total_candidatos = data['totalCandidaturas'].sum()
 st.markdown(f'Total de candidaturas: {total_candidatos}')
 
 if cluster:
-    data = make_clusters(data, n_cluster)
+    data = make_clusters(data=data, features=[x,y], n=n_cluster)
 
 fig = make_scatter(data=data, x=x, 
                    y=y, x_label=x_option, 
