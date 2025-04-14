@@ -52,7 +52,7 @@ tb_group_uf AS (
         SUM(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as totalCorRacaNaoBranca,
         SUM(total_bens) AS totalBens,
         AVG(total_bens) AS avgBens,
-        COALESCE(AVG(CASE WHEN total_bens > 1 THEN total_bens END), 0) AS avBensNotZero,
+        COALESCE(AVG(CASE WHEN total_bens > 1 THEN total_bens END), 0) AS avgBensNotZero,
         1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'CASADO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilCasado,
         1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'SOLTEIRO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSolteiro,
         1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL IN ('DIVORCIADO(A)', 'SEPARADO(A) JUDICIALMENTE') THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSeparadoDivorciado,
@@ -80,7 +80,7 @@ tb_group_br AS (
         SUM(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as totalCorRacaNaoBranca,
         SUM(total_bens) AS totalBens,
         AVG(total_bens) AS avgBens,
-        COALESCE(AVG(CASE WHEN total_bens > 1 THEN total_bens END), 0) AS avBensNotZero,
+        COALESCE(AVG(CASE WHEN total_bens > 1 THEN total_bens END), 0) AS avgBensNotZero,
         1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'CASADO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilCasado,
         1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'SOLTEIRO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSolteiro,
         1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL IN ('DIVORCIADO(A)', 'SEPARADO(A) JUDICIALMENTE') THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSeparadoDivorciado,
@@ -108,7 +108,7 @@ tb_group_cargo_uf AS (
             SUM(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as totalCorRacaNaoBranca,
             SUM(total_bens) AS totalBens,
             AVG(total_bens) AS avgBens,
-            COALESCE(AVG(CASE WHEN total_bens > 1 THEN total_bens END), 0) AS avBensNotZero,
+            COALESCE(AVG(CASE WHEN total_bens > 1 THEN total_bens END), 0) AS avgBensNotZero,
             1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'CASADO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilCasado,
             1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'SOLTEIRO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSolteiro,
             1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL IN ('DIVORCIADO(A)', 'SEPARADO(A) JUDICIALMENTE') THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSeparadoDivorciado,
@@ -137,7 +137,7 @@ tb_group_cargo_br AS (
             SUM(CASE WHEN DS_COR_RACA <> 'BRANCA' THEN 1 ELSE 0 END) as totalCorRacaNaoBranca,
             SUM(total_bens) AS totalBens,
             AVG(total_bens) AS avgBens,
-            COALESCE(AVG(CASE WHEN total_bens > 1 THEN total_bens END), 0) AS avBensNotZero,
+            COALESCE(AVG(CASE WHEN total_bens > 1 THEN total_bens END), 0) AS avgBensNotZero,
             1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'CASADO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilCasado,
             1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL = 'SOLTEIRO(A)' THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSolteiro,
             1.0 * SUM(CASE WHEN DS_ESTADO_CIVIL IN ('DIVORCIADO(A)', 'SEPARADO(A) JUDICIALMENTE') THEN 1 ELSE 0 END) / COUNT(*) AS txEstadoCivilSeparadoDivorciado,
@@ -168,8 +168,6 @@ tb_union_all AS (
 SELECT *
 
 FROM tb_union_all
-
-LIMIT 100
 
 
 
