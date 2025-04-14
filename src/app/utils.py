@@ -7,7 +7,7 @@ import streamlit as st
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from sklearn import cluster
 
-def make_scatter(data, x, y, cluster=False, size=False):
+def make_scatter(data, x, y, x_label, y_label, cluster=False, size=False):
 
     config = {
          'data':data, 
@@ -35,58 +35,59 @@ def make_scatter(data, x, y, cluster=False, size=False):
     texts = []
     for i in data['SG_PARTIDO'].unique():
          data_tmp = data[data['SG_PARTIDO'] == i]
-         x = data_tmp['txGenFeminino'].iloc[0]
-         y = data_tmp['txCorRacaPreta'].iloc[0]
-         texts.append(plt.text(x, y, i, fontsize=9))
+         x_pos = data_tmp[x].values[0]
+         y_pos = data_tmp[y].values[0]
+         texts.append(plt.text(x_pos, y_pos, i, fontsize=9))
 
     adjust_text(texts, 
                 only_move={'points': 'y', 'texts': 'xy'}, 
                 arrowprops=dict(arrowstyle='->', color='gray'))
 
     plt.grid(True)
-    plt.suptitle('Partidos: Cor vs Gênero - Eleições 2024')
+    plt.suptitle(f'Partidos: {x_label} vs {y_label} - Eleições 2024')
 
     if size:
         plt.title('Maior a bolha, maior o tamanho do partido.', fontsize=9)
 
-    plt.xlabel('Taxa de Mulheres')
-    plt.ylabel('Taxa de Pessoas Pretas')
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
 
     total_candidaturas = data['totalCandidaturas'].sum()
     
-    if total_candidaturas and not pd.isna(total_candidaturas):
+#     if total_candidaturas and not pd.isna(total_candidaturas):
+    if x == 'txGenFeminino' and y == 'txCorRacaPreta': 
         txCorRacaPreta = data['totalCorRacaPreta'].sum() / total_candidaturas
         txGenFeminino = data['totalGenFeminino'].sum() / total_candidaturas
-    else:
-         txCorRacaPreta = float('nan')
-         txGenFeminino = float('nan')
+#     else:
+#          txCorRacaPreta = float('nan')
+#          txGenFeminino = float('nan')
          
-    xmin, xmax = plt.xlim()
+        xmin, xmax = plt.xlim()
 
-    plt.hlines(y=txCorRacaPreta, 
-               xmin=xmin, 
-               xmax=xmax, 
-               color='black', 
-               linestyles='--', 
-               label=f'Pretos Geral: {f"{100 * txCorRacaPreta:.2f}" if txCorRacaPreta > 0 else "0.00"}%')
+        plt.hlines(y=txCorRacaPreta, 
+                       xmin=xmin, 
+                       xmax=xmax, 
+                       color='black', 
+                       linestyles='--', 
+                       label=f'Pretos Geral: {f"{100 * txCorRacaPreta:.2f}" if txCorRacaPreta > 0 else "0.00"}%')
 
-    ymin, ymax = plt.ylim()
+        ymin, ymax = plt.ylim()
 
-    plt.vlines(x=txGenFeminino, 
-               ymin=ymin,
-               ymax=ymax, 
-               color='tomato', 
-               linestyles='--', 
-               label=f'Mulheres Geral: {f"{100 * txGenFeminino:.2f}" if txGenFeminino > 0 else "0.00"}%')
+        plt.vlines(x=txGenFeminino, 
+                       ymin=ymin,
+                       ymax=ymax, 
+                       color='tomato', 
+                       linestyles='--', 
+                       label=f'Mulheres Geral: {f"{100 * txGenFeminino:.2f}" if txGenFeminino > 0 else "0.00"}%')
     
     
-    handles, labels = plt.gca().get_legend_handles_labels()
-    handles = handles[-2:]
-    labels = labels[-2:]
+        handles, labels = plt.gca().get_legend_handles_labels()
+        handles = handles[-2:]
+        labels = labels[-2:]
 
-    plt.legend(handles=handles, labels=labels, 
-               loc='lower left', title='Partidos', 
-               title_fontsize=10, bbox_to_anchor=(0.55, -0.35))
+        plt.legend(handles=handles, labels=labels, 
+                   loc='lower left', title='Partidos', 
+                   title_fontsize=10, bbox_to_anchor=(0.55, -0.35))
 
     return fig
 

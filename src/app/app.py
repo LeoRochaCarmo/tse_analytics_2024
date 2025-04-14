@@ -16,6 +16,22 @@ def create_df():
     filename = os.path.join(data_path, 'data_partidos.parquet')
     return pd.read_parquet(filename)
 
+features_map = {
+'PERCENTUAL FEMININO': 'txGenFeminino',
+'PERCENTUAL RAÇA PRETA': 'txCorRacaPreta',
+'PERCENTUAL RAÇA PRETA PARDA': 'txCorRacaPretaParda',
+'PERCENTUAL RAÇA NÃO BRANCA': 'txCorRacaNaoBranca',
+'MÉDIA BENS TOTAL': 'avgBens',
+'MÉDIA BENS SEM ZERO': 'avgBensNotZero',
+'PERCENTUAL ESTADO CIVIL CASADO(A)': 'txEstadoCivilCasado',
+'PERCENTUAL ESTADO CIVIL SOLTEIRO(A)': 'txEstadoCivilSolteiro',
+'PERCENTUAL ESTADO CIVIL DIVORCIADO(A)': 'txEstadoCivilSeparadoDivorciado',
+'MÉDIA IDADE': 'avgIdade',
+}
+
+features_options = list(features_map.keys())
+features_options.sort()
+
 #%%
 
 df = create_df()
@@ -32,38 +48,54 @@ uf_options.remove('BR')
 uf_options = ['BR'] + uf_options
 
 cargos_options = list(df['DS_CARGO'].unique())
-# cargos_options.sort()
-# cargos_options.remove('GERAL')
-# cargos_options = ['GERAL'] + cargos_options
+cargos_options.sort()
+cargos_options.remove('GERAL')
+cargos_options = ['GERAL'] + cargos_options
 
 col1, col2 = st.columns(2, vertical_alignment='center', gap='medium')
-
 with col1:
     estado = st.selectbox(label='Estado',
                           placeholder='Selecione o estado.',
                           index=None,
                           options=uf_options)
-    size = st.checkbox(label='Tamanho das bolhas')
+
+with col2:                         
     cargo = st.selectbox(label='Cargo',
                           placeholder='Selecione um cargo',
                           index=None,
                           options=cargos_options)
+    
+col1, col2 = st.columns(2, vertical_alignment='center', gap='medium')
+with col1:
+    x_option = st.selectbox(label='Eixo x', options=features_options)
+    x = features_map[x_option]
+    features_options.remove(x_option)
 
-with col2:                         
-    n_cluster = st.number_input(label='Quantidade de clusters', format='%d', max_value=10, min_value=1)
+with col2:
+    y_option = st.selectbox(label='Eixo y', options=features_options)
+    y = features_map[y_option]
+
+col1, col2 = st.columns(2, vertical_alignment='center', gap='medium')
+with col1:
     cluster = st.checkbox(label='Definir cluster')
+    if cluster:
+        n_cluster = st.number_input(label='Quantidade de clusters', format='%d', max_value=10, min_value=1)
+
+with col2:
+    size = st.checkbox(label='Tamanho das bolhas')
 
 data = df[(df['SG_UF'] == estado) & (df['DS_CARGO'] == cargo)].copy()
 
 total_candidatos = data['totalCandidaturas'].sum()
 st.markdown(f'Total de candidaturas: {total_candidatos}')
+
 if cluster:
     data = make_clusters(data, n_cluster)
 
-x = 'txGenFeminino'
-y = 'txCorRacaPreta'
-
-fig = make_scatter(data=data, x=x, y=y, size=size, cluster=cluster)
+fig = make_scatter(data=data, x=x, 
+                   y=y, x_label=x_option, 
+                   y_label=y_option, 
+                   size=size, cluster=cluster)
 
 st.pyplot(fig)
 
