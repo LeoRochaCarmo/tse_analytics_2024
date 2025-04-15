@@ -91,7 +91,7 @@ with col2:
     if cluster:
         features_options_selected = st.multiselect(label='Variáveis para Agrupamento', 
                                                    options=features_options,
-                                                   default=['PERCENTUAL FEMININO', 'PERCENTUAL RAÇA PRETA'])
+                                                   default=[x_option, y_option])
         features_selected = [features_map[i] for i in features_options_selected] 
 
 data = df[(df['SG_UF'] == estado) & (df['DS_CARGO'] == cargo)].copy()
