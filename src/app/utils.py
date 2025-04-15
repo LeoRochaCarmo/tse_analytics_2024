@@ -89,11 +89,13 @@ def make_scatter(data, x, y, x_label, y_label, cluster=False, size=False):
         plt.legend(handles=handles, labels=labels, 
                    loc='lower left', title='Partidos', 
                    title_fontsize=10, bbox_to_anchor=(0.55, -0.35))
+    else:
+        legend = plt.legend()
+        legend.remove()
 
     return fig
 
 def make_clusters(data, features, n=6):
-     
     norm = preprocessing.MinMaxScaler()
     data_norm = norm.fit_transform(data[features])
     model = cluster.KMeans(n_clusters=n, random_state=42, max_iter=10000)
