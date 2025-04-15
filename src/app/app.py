@@ -71,11 +71,14 @@ col1, col2 = st.columns(2, vertical_alignment='center', gap='medium')
 with col1:
     x_option = st.selectbox(label='Eixo x', options=features_options, index=6)
     x = features_map[x_option]
-    features_options.remove(x_option)
-
+    new_features_options = features_options.copy()
+    new_features_options.remove(x_option)
+    
 with col2:
-    y_option = st.selectbox(label='Eixo y', options=features_options, index=7)
+    y_option = st.selectbox(label='Eixo y', options=new_features_options, index=7)
     y = features_map[y_option]
+
+size = st.checkbox(label='Tamanho das bolhas')
 
 # Definição do uso de cluster
 col1, col2 = st.columns(2, vertical_alignment='center', gap='medium')
@@ -85,7 +88,11 @@ with col1:
         n_cluster = st.number_input(label='Quantidade de clusters', format='%d', max_value=10, min_value=1)
 
 with col2:
-    size = st.checkbox(label='Tamanho das bolhas')
+    if cluster:
+        features_options_selected = st.multiselect(label='Variáveis para Agrupamento', 
+                                                   options=features_options,
+                                                   default=['PERCENTUAL FEMININO', 'PERCENTUAL RAÇA PRETA'])
+        features_selected = [features_map[i] for i in features_options_selected] 
 
 data = df[(df['SG_UF'] == estado) & (df['DS_CARGO'] == cargo)].copy()
 
@@ -93,7 +100,7 @@ total_candidatos = data['totalCandidaturas'].sum()
 st.markdown(f'Total de candidaturas: {total_candidatos}')
 
 if cluster:
-    data = make_clusters(data=data, features=[x,y], n=n_cluster)
+    data = make_clusters(data=data, features=features_selected, n=n_cluster)
 
 fig = make_scatter(data=data, x=x, 
                    y=y, x_label=x_option, 
