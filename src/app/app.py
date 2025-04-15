@@ -85,7 +85,7 @@ col1, col2 = st.columns(2, vertical_alignment='center', gap='medium')
 with col1:
     cluster = st.checkbox(label='Definir cluster')
     if cluster:
-        n_cluster = st.number_input(label='Quantidade de clusters', format='%d', max_value=10, min_value=1)
+        n_cluster = st.number_input(label='Quantidade de clusters', format='%d', value=7, max_value=10, min_value=1)
 
 with col2:
     if cluster:
